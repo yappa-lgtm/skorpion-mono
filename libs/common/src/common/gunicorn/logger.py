@@ -1,8 +1,8 @@
 from logging import Formatter
 
+from common.logger import LOG_DEFAULT_FORMAT
 from gunicorn.glogging import Logger
 
-from common.logger import LOG_DEFAULT_FORMAT
 
 class GunicornLogger(Logger):
     def setup(self, cfg) -> None:

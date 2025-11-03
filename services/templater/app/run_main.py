@@ -1,6 +1,6 @@
 from common.gunicorn import GunicornApplication, get_app_options
-from main import main_app
 from core.config import settings
+from main import main_app
 
 
 def main():

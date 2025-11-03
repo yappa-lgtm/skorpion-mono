@@ -1,6 +1,5 @@
-from fastapi import APIRouter, status
-
 from core.schemas.healthcheck import HealthCheck
+from fastapi import APIRouter, status
 
 router = APIRouter(tags=["HealthCheck"])
 

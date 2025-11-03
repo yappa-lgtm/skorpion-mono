@@ -1,0 +1,19 @@
+[project]
+name = "common"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "yappa-lgtm", email = "boris.ohorodnii@outlook.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.121.0",
+    "gunicorn>=23.0.0",
+    "pydantic>=2.12.3",
+    "pydantic-settings>=2.11.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.6,<0.10.0"]
+build-backend = "uv_build"
+

@@ -1,0 +1,27 @@
+services:
+  parser_service:
+    container_name: parser_service
+    build:
+      context: ../../
+      dockerfile: ./services/parser/docker-build/app/Dockerfile
+    environment:
+      APP_CONFIG__RUN__HOST: "0.0.0.0"
+      APP_CONFIG__RUN__PORT: 7010
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./services/parser/app
+          target: /app
+        - action: sync+restart
+          path: ./libs/common/src/common
+          target: /libs/common/src/common
+        - action: rebuild
+          path: ./services/parser/poetry.lock
+    ports:
+      - "7676:7676"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://0.0.0.0:7676/api/v1/healthcheck/ || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

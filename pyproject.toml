@@ -1,0 +1,21 @@
+[project]
+name = "skorpion-mono"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.uv.workspace]
+members = [
+    "libs/common",
+    "services/parser",
+    "services/ai",
+    "services/templater",
+    "services/modifier",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "isort>=7.0.0",
+]

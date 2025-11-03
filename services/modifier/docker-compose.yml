@@ -1,0 +1,27 @@
+services:
+  modifier_service:
+    container_name: modifier_service
+    build:
+      context: ../../
+      dockerfile: ./services/modifier/docker-build/app/Dockerfile
+    environment:
+      APP_CONFIG__RUN__HOST: "0.0.0.0"
+      APP_CONFIG__RUN__PORT: 7020
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./services/modifier/app
+          target: /app
+        - action: sync+restart
+          path: ./libs/common/src/common
+          target: /libs/common/src/common
+        - action: rebuild
+          path: ./services/modifier/poetry.lock
+    ports:
+      - "7020:7020"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://0.0.0.0:7020/api/v1/healthcheck/ || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

@@ -7,16 +7,6 @@ services:
     environment:
       APP_CONFIG__RUN__HOST: "0.0.0.0"
       APP_CONFIG__RUN__PORT: 7040
-    develop:
-      watch:
-        - action: sync+restart
-          path: ./services/templater/app
-          target: /app
-        - action: sync+restart
-          path: ./libs/common/src/common
-          target: /libs/common/src/common
-        - action: rebuild
-          path: ./services/templater/poetry.lock
     ports:
       - "7040:7040"
     healthcheck:

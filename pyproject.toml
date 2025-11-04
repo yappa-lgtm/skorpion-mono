@@ -12,6 +12,7 @@ members = [
     "services/ai",
     "services/templater",
     "services/modifier",
+    "services/gateway",
 ]
 
 [dependency-groups]

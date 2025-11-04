@@ -1,11 +1,12 @@
 from pathlib import Path
-from typing import Literal, List
-import yaml
+from typing import List, Literal
 
+import yaml
 from common.config import BaseAppSettings
 from common.gunicorn import GunicornRunConfig
 from common.logger import BaseLoggingConfig
 from pydantic import BaseModel
+
 
 class ApiRoutes(BaseModel):
     path: str
@@ -13,6 +14,7 @@ class ApiRoutes(BaseModel):
     service: str
     url: str
     rate_limit: str
+
 
 class ApiV1Prefix(BaseModel):
     prefix: str = "/v1"
@@ -38,22 +40,24 @@ class Settings(BaseAppSettings):
         if not path.exists():
             raise FileNotFoundError(f"Routes file not found: {yaml_path}")
 
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
 
-        if not isinstance(data, dict) or 'routes' not in data:
+        if not isinstance(data, dict) or "routes" not in data:
             raise ValueError("YAML must contain 'routes' key")
 
-        routes_data = data['routes']
+        routes_data = data["routes"]
         if not isinstance(routes_data, list):
             raise ValueError("'routes' must be a list")
 
         return [ApiRoutes(**route) for route in routes_data]
 
 
-
 def load_settings() -> Settings:
-    routes = Settings.load_routes_from_yaml(Path.cwd() / "services" / "gateway" / "routes.yml") # TODO! FIX PATH
+    routes = Settings.load_routes_from_yaml(
+        Path.cwd() / "services" / "gateway" / "routes.yml"
+    )  # TODO! FIX PATH
     return Settings(routes=routes)
+
 
 settings = load_settings()

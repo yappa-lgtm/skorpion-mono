@@ -1,7 +1,12 @@
 from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from common.exceptions.api import APIException, RouteNotFoundException
+from common.exceptions.api import (
+    APIException,
+    RouteNotFoundException,
+    ValidationModelException,
+)
 import logging
 
 logger = logging.getLogger(__name__)
@@ -30,6 +35,19 @@ def setup_exception_handlers(app: FastAPI):
             status_code=exc.status_code,
             message=str(exc.detail),
             code="http_error",
+        )
+        return JSONResponse(
+            status_code=error.status_code,
+            content=error.to_dict(),
+        )
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(
+        request: Request, exc: RequestValidationError
+    ):
+        logger.error(exc)
+        error = ValidationModelException(
+            details=exc.errors(),
         )
         return JSONResponse(
             status_code=error.status_code,

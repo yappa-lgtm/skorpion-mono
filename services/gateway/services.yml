@@ -1,0 +1,12 @@
+services:
+  - name: parser-service
+    host: http://localhost:7010
+  
+  - name: modifier-service
+    host: http://localhost:7020
+  
+  - name: ai-service
+    host: http://localhost:7030
+
+  - name: templater-service
+    host: http://localhost:7040

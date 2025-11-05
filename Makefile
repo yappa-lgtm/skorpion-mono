@@ -3,7 +3,7 @@ APP_NAME ?= gateway
 SRC_DIR := services/$(APP_NAME)/app/run
 
 run:
-	$(UV) run --package $(APP_NAME) python $(SRC_DIR)
+	cd services/$(APP_NAME) && $(UV) run python app/run
 
 install:
 	$(UV) sync --all-packages

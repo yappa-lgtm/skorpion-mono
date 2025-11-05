@@ -1,3 +1,4 @@
+import os
 from common.config import BaseAppSettings
 from common.gunicorn import GunicornRunConfig
 from common.logger import BaseLoggingConfig
@@ -19,5 +20,7 @@ class Settings(BaseAppSettings):
     api: ApiPrefix = ApiPrefix()
     logging: BaseLoggingConfig = BaseLoggingConfig()
 
+
+print(os.getcwd())
 
 settings = Settings()

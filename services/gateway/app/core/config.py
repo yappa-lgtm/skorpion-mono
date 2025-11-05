@@ -1,19 +1,16 @@
 from pathlib import Path
-from typing import List, Literal
+from typing import List
 
-import yaml
 from common.config import BaseAppSettings
 from common.gunicorn import GunicornRunConfig
 from common.logger import BaseLoggingConfig
 from pydantic import BaseModel
+import yaml
 
 
-class ApiRoutes(BaseModel):
-    path: str
-    method: Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
-    service: str
-    url: str
-    rate_limit: str
+class Service(BaseModel):
+    name: str
+    host: str
 
 
 class ApiV1Prefix(BaseModel):
@@ -30,34 +27,16 @@ class Settings(BaseAppSettings):
     run: GunicornRunConfig = GunicornRunConfig()
     api: ApiPrefix = ApiPrefix()
     logging: BaseLoggingConfig = BaseLoggingConfig()
-    routes: List[ApiRoutes]
-
-    # TODO! CHANGE ON CUSTOM APPLICATION EXCEPTIONS
-    @classmethod
-    def load_routes_from_yaml(cls, yaml_path: str | Path) -> List[ApiRoutes]:
-        path = Path(yaml_path)
-
-        if not path.exists():
-            raise FileNotFoundError(f"Routes file not found: {yaml_path}")
-
-        with open(path, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-
-        if not isinstance(data, dict) or "routes" not in data:
-            raise ValueError("YAML must contain 'routes' key")
-
-        routes_data = data["routes"]
-        if not isinstance(routes_data, list):
-            raise ValueError("'routes' must be a list")
-
-        return [ApiRoutes(**route) for route in routes_data]
+    services: List[Service]
 
 
 def load_settings() -> Settings:
-    routes = Settings.load_routes_from_yaml(
-        Path.cwd() / "services" / "gateway" / "routes.yml"
-    )  # TODO! FIX PATH
-    return Settings(routes=routes)
+    routes_path = Path.cwd() / "services.yml"
+
+    with open(routes_path, "r", encoding="utf-8") as f:
+        services = yaml.safe_load(f)
+
+    return Settings(**services)
 
 
 settings = load_settings()

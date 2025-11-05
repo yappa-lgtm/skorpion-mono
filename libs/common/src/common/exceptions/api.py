@@ -25,3 +25,12 @@ class APIException(HTTPException):
         if self.details:
             data["details"] = self.details
         return data
+
+
+class RouteNotFoundException(APIException):
+    def __init__(self, route: str):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            message=f"Route '{route}' not found",
+            code="route_not_found",
+        )

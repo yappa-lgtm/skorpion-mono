@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
-from common.exceptions.api import APIException
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from common.exceptions.api import APIException, RouteNotFoundException
 import logging
 
 logger = logging.getLogger(__name__)
@@ -13,6 +14,26 @@ def setup_exception_handlers(app: FastAPI):
         return JSONResponse(
             status_code=exc.status_code,
             content=exc.to_dict(),
+        )
+
+    @app.exception_handler(StarletteHTTPException)
+    async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+        logger.error(exc)
+        if exc.status_code == status.HTTP_404_NOT_FOUND:
+            route_exc = RouteNotFoundException(request.url.path)
+            return JSONResponse(
+                status_code=route_exc.status_code,
+                content=route_exc.to_dict(),
+            )
+
+        error = APIException(
+            status_code=exc.status_code,
+            message=str(exc.detail),
+            code="http_error",
+        )
+        return JSONResponse(
+            status_code=error.status_code,
+            content=error.to_dict(),
         )
 
     @app.exception_handler(Exception)

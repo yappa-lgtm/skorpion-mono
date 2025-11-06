@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -7,7 +8,6 @@ from common.exceptions.api import (
     RouteNotFoundException,
     ValidationModelException,
 )
-import logging
 
 logger = logging.getLogger(__name__)
 

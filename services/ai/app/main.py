@@ -1,7 +1,10 @@
+import logging
 from common.exceptions.middleware import setup_exception_handlers
 from api import router as api_router
 from core.config import settings
 from fastapi import FastAPI
+
+logging.basicConfig(format=settings.logging.log_format)
 
 main_app = FastAPI()
 

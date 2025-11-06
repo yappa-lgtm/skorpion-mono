@@ -3,7 +3,19 @@ APP_NAME ?= gateway
 SRC_DIR := services/$(APP_NAME)/app/run
 
 run:
-	cd services/$(APP_NAME) && $(UV) run python app/run
+	cd services/$(APP_NAME) && $(UV) run python app/run\
+
+run-docker:
+	cd services/$(APP_NAME) && docker compose up -d
+
+run-all:
+	@for service in $$(ls services); do \
+		echo "🚀 Starting $$service..."; \
+		cd services/$$service && \
+		($(UV) run python app/run &) && \
+		cd ../..; \
+	done
+	@echo "✅ All services started"
 
 install:
 	$(UV) sync --all-packages

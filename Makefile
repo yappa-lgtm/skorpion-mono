@@ -3,7 +3,7 @@ APP_NAME ?= gateway
 SRC_DIR := services/$(APP_NAME)/app/run
 
 run:
-	cd services/$(APP_NAME) && $(UV) run python app/run\
+	cd services/$(APP_NAME) && $(UV) run python app/run
 
 run-docker:
 	cd services/$(APP_NAME) && docker compose up -d
@@ -16,6 +16,14 @@ run-all:
 		cd ../..; \
 	done
 	@echo "✅ All services started"
+
+watch:
+	$(UV) run watchmedo auto-restart \
+			--directory=./services/$(APP_NAME) \
+			--pattern="*.py" \
+			--recursive \
+			--verbose \
+			-- $(UV) run python services/$(APP_NAME)/app/run
 
 install:
 	$(UV) sync --all-packages

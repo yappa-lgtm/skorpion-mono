@@ -31,7 +31,7 @@ class Settings(BaseAppSettings):
 
 
 def load_settings() -> Settings:
-    routes_path = Path.cwd() / "services.yml"
+    routes_path = Path(__file__).resolve().parent.parent.parent / "services.yml"
 
     with open(routes_path, "r", encoding="utf-8") as f:
         services = yaml.safe_load(f)
